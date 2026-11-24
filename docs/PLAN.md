@@ -123,12 +123,12 @@ Build the handlers' screens, with the brand.
 
 Success criteria:
 
-- [ ] Vitest tests cover each page with a stubbed `fetch`, including an empty decision and a decided claim
-- [ ] In the browser (Playwright MCP), the queue lists 25 claims and the state counts add up to 25
-- [ ] Clicking a claim opens its page with its story, items, documents and policy
-- [ ] After the Phase 3 run, CLM-1001's page shows the decision, reason, policy section and payout
-- [ ] Both light and dark mode match `docs/BRAND.md`: rounded panels, no one-edge borders, no thin top lines
-- [ ] `npm run check:ts` passes with coverage at or above 80%
+- [x] Vitest tests cover each page with a stubbed `fetch`, including an empty decision and a decided claim
+- [x] In the browser (Playwright MCP), the queue lists 25 claims and the state counts add up to 25
+- [x] Clicking a claim opens its page with its story, items, documents and policy
+- [x] After the Phase 3 run, CLM-1001's page shows the decision, reason, policy section and payout
+- [x] Both light and dark mode match `docs/BRAND.md`: rounded panels, no one-edge borders, no thin top lines
+- [x] `npm run check:ts` passes with coverage at or above 80%
 
 ## Phase 5: Agent steps, sign-off and instructions
 
