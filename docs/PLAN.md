@@ -134,17 +134,17 @@ Success criteria:
 
 Build the live view of the agent's work and the handler's part in the payment rule.
 
-- **Steps on the claim page**: each step in order, with time and type (tool call, tool result, reply). While the claim is `in_progress` the page polls `get_claim` every two seconds and stops once it's done.
+- **Steps on the claim page**: each step in order, with time and type (tool call, tool result, reply). The page polls `get_claim` and `list_steps` every two seconds until the agent has finished: the claim is decided or waiting for sign-off and the last step is the agent's final reply (it still pays and replies after recording the decision). It also polls a waiting claim, so it notices when the agent starts.
 - **Sign-off**: on an `awaiting_sign_off` claim, a panel shows the payout and a choice of the handlers who can sign off, and a button to sign off. The payment shows once it's released.
 - **Instructions page**: the agent's instructions from `get_instructions`, read only.
 
 Success criteria:
 
-- [ ] Vitest tests cover polling (it starts and stops), sign-off (success and a 403 error shown to the user) and the instructions page
-- [ ] In the browser, running `uv run -m agent CLM-1002` while CLM-1002's page is open shows the steps arriving and then the decision
-- [ ] In the browser, a claim the agent approved over $1,000 shows the sign-off panel with only the handlers who can approve over the limit; signing off moves it to `decided` and shows the payment
-- [ ] The instructions page shows the same text as `backend/instructions.md`, with no way to edit it
-- [ ] `npm run check:ts` passes
+- [x] Vitest tests cover polling (it starts and stops), sign-off (success and a 403 error shown to the user) and the instructions page
+- [x] In the browser, running `uv run -m agent CLM-1002` while CLM-1002's page is open shows the steps arriving and then the decision
+- [x] In the browser, a claim the agent approved over $1,000 shows the sign-off panel with only the handlers who can approve over the limit; signing off moves it to `decided` and shows the payment
+- [x] The instructions page shows the same text as `backend/instructions.md`, with no way to edit it
+- [x] `npm run check:ts` passes
 
 ## Phase 6: End-to-end tests, the full queue and status
 

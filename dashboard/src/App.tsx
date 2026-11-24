@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ClaimPage } from "./ClaimPage";
+import { Instructions } from "./Instructions";
 import { Queue } from "./Queue";
 
 function useHash() {
@@ -19,6 +20,7 @@ function useHash() {
 function Page({ hash }: Readonly<{ hash: string }>) {
   const claim = /^#\/claims\/([\w-]+)$/.exec(hash);
   if (claim) return <ClaimPage key={claim[1]} claimId={claim[1]} />;
+  if (hash === "#/instructions") return <Instructions />;
   return <Queue />;
 }
 
@@ -32,6 +34,7 @@ export function App() {
         </a>
         <nav>
           <a href="#/">Queue</a>
+          <a href="#/instructions">Agent instructions</a>
         </nav>
       </header>
       <main>

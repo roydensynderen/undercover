@@ -292,3 +292,100 @@ blockquote {
   margin: 0;
   padding-left: 1.1rem;
 }
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: max-content 6.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+}
+
+.steps li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.kind {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.kind-tool_call {
+  color: var(--link);
+}
+
+.kind-reply {
+  color: var(--sea-green-text);
+}
+
+.step-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.step-tool_call,
+.step-tool_result,
+summary.step-text,
+pre {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+summary {
+  cursor: pointer;
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0.5rem 0 0;
+}
+
+.sign-off {
+  background: var(--coral);
+  color: var(--midnight);
+}
+
+.sign-off .row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+select,
+button {
+  font: inherit;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+}
+
+select {
+  border: 1px solid var(--midnight);
+  background: #ffffff;
+  color: var(--midnight);
+}
+
+button {
+  border: none;
+  background: var(--midnight);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.instructions {
+  white-space: pre-wrap;
+  max-width: 75ch;
+}

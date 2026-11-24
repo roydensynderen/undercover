@@ -1,10 +1,29 @@
 import { useCallback } from "react";
-import { api, type Claim, type Policy, type PreviousClaim } from "./api";
+import {
+  api,
+  type Claim,
+  type Policy,
+  type PreviousClaim,
+  type Step,
+} from "./api";
 import { finished, label, money, outcomeLabels } from "./format";
+import { SignOffPanel } from "./SignOffPanel";
 import { StatusBadge } from "./StatusBadge";
+import { Steps } from "./Steps";
 import { usePolled } from "./usePolled";
 
-const notFinished = (claim: Claim) => !finished(claim.status);
+interface Loaded {
+  claim: Claim;
+  steps: Step[];
+}
+
+/** The agent is working until the claim is decided and its last step is its final reply. */
+function agentWorking({ claim, steps }: Loaded): boolean {
+  const last = steps.at(-1);
+  return (
+    !finished(claim.status) || (last !== undefined && last.kind !== "reply")
+  );
+}
 const never = () => false;
 
 function paymentText(claim: Claim): string {
@@ -99,11 +118,18 @@ function HistoryPanel({ customerId }: Readonly<{ customerId: string }>) {
 }
 
 export function ClaimPage({ claimId }: Readonly<{ claimId: string }>) {
-  const load = useCallback(() => api.getClaim(claimId), [claimId]);
-  const { data: claim, error } = usePolled(load, notFinished);
+  const load = useCallback(
+    async (): Promise<Loaded> => ({
+      claim: await api.getClaim(claimId),
+      steps: await api.listSteps(claimId),
+    }),
+    [claimId],
+  );
+  const { data, error, reload } = usePolled(load, agentWorking);
 
   if (error) return <p className="error">{error}</p>;
-  if (!claim) return <p>Loading {claimId}</p>;
+  if (!data) return <p>Loading {claimId}</p>;
+  const { claim, steps } = data;
 
   return (
     <>
@@ -123,7 +149,14 @@ export function ClaimPage({ claimId }: Readonly<{ claimId: string }>) {
       </p>
       <div className="columns">
         <div>
+          {claim.status === "awaiting_sign_off" && (
+            <SignOffPanel claim={claim} onSignedOff={reload} />
+          )}
           <DecisionPanel claim={claim} />
+          <Steps
+            steps={steps}
+            working={claim.status !== "waiting" && agentWorking(data)}
+          />
           <section className="panel">
             <h2>The customer's story</h2>
             <blockquote>{claim.story}</blockquote>

@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { ClaimPage } from "./ClaimPage";
-import { claim, claimRoutes, stubApi } from "./stubs";
+import { claim, claimRoutes, steps, stubApi } from "./stubs";
 
 afterEach(() => {
   cleanup();
@@ -33,6 +33,7 @@ it("shows the claim in full", async () => {
   expect(
     screen.getByText("The agent has not decided this claim yet."),
   ).toBeDefined();
+  expect(screen.getByText("The agent has not started.")).toBeDefined();
   expect(await screen.findByText("Premium")).toBeDefined();
   expect(screen.getByText("Electronics plus")).toBeDefined();
   expect(
@@ -95,6 +96,39 @@ it("refreshes until the agent has decided", async () => {
   routes["GET /api/claims/CLM-1001"] = decided;
   await act(() => vi.advanceTimersByTimeAsync(2000));
   expect(await screen.findByText("Decision: Approved")).toBeDefined();
+  const calls = fetchMock.mock.calls.length;
+  await act(() => vi.advanceTimersByTimeAsync(6000));
+  expect(fetchMock.mock.calls).toHaveLength(calls);
+});
+
+it("shows the agent's steps as they arrive", async () => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  const routes = claimRoutes(claim({ status: "in_progress" }));
+  stubApi(routes);
+  render(<ClaimPage claimId="CLM-1001" />);
+  expect(await screen.findByText("The agent is starting.")).toBeDefined();
+  routes["GET /api/claims/CLM-1001/steps"] = steps.slice(0, 1);
+  await act(() => vi.advanceTimersByTimeAsync(2000));
+  expect(
+    await screen.findByText('get_claim({"claim_id": "CLM-1001"})'),
+  ).toBeDefined();
+});
+
+it("keeps refreshing after the decision until the agent's final reply", async () => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  const routes = claimRoutes(
+    claim({ status: "decided", decision: decided.decision }),
+  );
+  routes["GET /api/claims/CLM-1001/steps"] = steps.slice(0, 2);
+  const fetchMock = stubApi(routes);
+  render(<ClaimPage claimId="CLM-1001" />);
+  expect(await screen.findByText("Not paid")).toBeDefined();
+  expect(screen.getByText("Working")).toBeDefined();
+  routes["GET /api/claims/CLM-1001"] = decided;
+  routes["GET /api/claims/CLM-1001/steps"] = steps;
+  await act(() => vi.advanceTimersByTimeAsync(2000));
+  expect(await screen.findByText("Paid $420.00")).toBeDefined();
+  expect(screen.queryByText("Working")).toBeNull();
   const calls = fetchMock.mock.calls.length;
   await act(() => vi.advanceTimersByTimeAsync(6000));
   expect(fetchMock.mock.calls).toHaveLength(calls);

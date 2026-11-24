@@ -29,3 +29,14 @@ it("opens a claim from its link", async () => {
     await screen.findByText("My flight home from Rome was canceled."),
   ).toBeDefined();
 });
+
+it("opens the agent's instructions", async () => {
+  stubApi({
+    "GET /api/instructions": { text: "You are the UnderCover Agent." },
+  });
+  window.location.hash = "#/instructions";
+  render(<App />);
+  expect(
+    await screen.findByRole("heading", { name: "The agent's instructions" }),
+  ).toBeDefined();
+});
