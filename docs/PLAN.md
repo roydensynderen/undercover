@@ -105,11 +105,11 @@ Replace the hello-world agent with the claims agent.
 
 Success criteria:
 
-- [ ] A stub-model test runs a claim end to end: the tools are called, steps are recorded, the decision is saved and the payment is made
-- [ ] A stub-model test where the agent approves $1,250.00 and then calls `pay_claim` gets the 409 back as a tool result, and the claim stays `awaiting_sign_off` with no payment
-- [ ] A test checks the CLI picks only `waiting` claims, in queue order, and that a claim id argument runs just that claim
-- [ ] With `OPENROUTER_API_KEY` set and the backend running, `uv run -m agent CLM-1001` records a decision with a reason, a policy section and a payout, and `GET /api/claims/CLM-1001` shows its steps (this one call uses the real model; it costs a few cents, or nothing with `MODEL_NAME=openrouter/free`)
-- [ ] `npm run check:python` passes
+- [x] A stub-model test runs a claim end to end: the tools are called, steps are recorded, the decision is saved and the payment is made
+- [x] A stub-model test where the agent approves $1,250.00 and then calls `pay_claim` gets the 409 back as a tool result, and the claim stays `awaiting_sign_off` with no payment
+- [x] A test checks the CLI picks only `waiting` claims, in queue order, and that a claim id argument runs just that claim
+- [x] With `OPENROUTER_API_KEY` set and the backend running, `uv run -m agent CLM-1001` records a decision with a reason, a policy section and a payout, and `GET /api/claims/CLM-1001` shows its steps (this one call uses the real model; it costs a few cents, or nothing with `MODEL_NAME=openrouter/free`)
+- [x] `npm run check:python` passes
 
 ## Phase 4: Dashboard queue and claim pages
 
