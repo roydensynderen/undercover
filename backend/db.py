@@ -141,3 +141,11 @@ def records(conn: sqlite3.Connection, kind: str) -> list[Any]:
         "SELECT body FROM records WHERE kind = ? ORDER BY id", (kind,)
     ).fetchall()
     return [json.loads(row["body"]) for row in rows]
+
+
+def setting(conn: sqlite3.Connection, name: str) -> Any:
+    """Return one of the insurer's settings: plans or company."""
+    row = conn.execute(
+        "SELECT body FROM records WHERE kind = 'settings' AND id = ?", (name,)
+    ).fetchone()
+    return json.loads(row["body"])

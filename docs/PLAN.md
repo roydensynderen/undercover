@@ -44,6 +44,7 @@ Every operation has an `operation_id`, a one-line docstring and no optional inpu
 | `list_handlers` | `GET /api/handlers` | Dashboard |
 | `start_claim` | `POST /api/claims/{claim_id}/start` | Agent entry point |
 | `record_step` | `POST /api/claims/{claim_id}/steps` | Agent entry point |
+| `list_steps` | `GET /api/claims/{claim_id}/steps` | Dashboard |
 | `record_decision` | `POST /api/claims/{claim_id}/decision` | Agent |
 | `pay_claim` | `POST /api/claims/{claim_id}/payment` | Agent |
 | `sign_off` | `POST /api/claims/{claim_id}/sign-off` | Dashboard |
@@ -80,19 +81,19 @@ Build the operations that move a claim through its states, and the rule that blo
 
 - `start_claim`, `record_step`, `record_decision`, `pay_claim`, `sign_off`, `get_instructions`.
 - `backend/instructions.md`: the agent's instructions. Work the claim from its own records and the policy wording, check dates, waiting periods, limits, per-item limits, the deductible and exclusions, show the payout calculation, then record one decision with the section that settles it, and pay only if approved.
-- `get_claim` now includes the decision, payment, sign-off and steps.
+- `get_claim` includes the decision, payment and sign-off. The steps have their own operation, `list_steps`, so the agent's `get_claim` doesn't fill up with its own steps.
 
 Success criteria:
 
-- [ ] Tests cover each state change: `waiting` → `in_progress` → `decided`, and `in_progress` → `awaiting_sign_off` → `decided`
-- [ ] An approval of $420.00 is `decided`, and `pay_claim` with 420.00 records the payment
-- [ ] An approval of $1,250.00 is `awaiting_sign_off`, and `pay_claim` returns 409 with a message that a handler must sign off
-- [ ] `sign_off` by a handler without `can_approve_over_limit` returns 403; by one with it, the claim becomes `decided` and the payment is recorded
-- [ ] `pay_claim` returns 409 for a declined or referred claim, a wrong amount, or a second payment
-- [ ] `record_decision` rejects a payout on a decline or refer, and an unknown decision value (422)
-- [ ] `GET /api/instructions` returns the text of `backend/instructions.md`
-- [ ] With the server running, the same sequence works with `curl` against `localhost:8000`
-- [ ] `npm run check:python` passes
+- [x] Tests cover each state change: `waiting` → `in_progress` → `decided`, and `in_progress` → `awaiting_sign_off` → `decided`
+- [x] An approval of $420.00 is `decided`, and `pay_claim` with 420.00 records the payment
+- [x] An approval of $1,250.00 is `awaiting_sign_off`, and `pay_claim` returns 409 with a message that a handler must sign off
+- [x] `sign_off` by a handler without `can_approve_over_limit` returns 403; by one with it, the claim becomes `decided` and the payment is recorded
+- [x] `pay_claim` returns 409 for a declined or referred claim, a wrong amount, or a second payment
+- [x] `record_decision` rejects a payout on a decline or refer, and an unknown decision value (422)
+- [x] `GET /api/instructions` returns the text of `backend/instructions.md`
+- [x] With the server running, the same sequence works with `curl` against `localhost:8000`
+- [x] `npm run check:python` passes
 
 ## Phase 3: The UnderCover Agent
 
