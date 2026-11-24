@@ -116,6 +116,7 @@ def model() -> ChatOpenAI:
         base_url=OPENROUTER_BASE_URL,
         api_key=SecretStr(os.environ["OPENROUTER_API_KEY"]),
         reasoning_effort=None if name else "low",
+        max_retries=10,  # with backoff, enough to wait out a per-minute rate limit
     )
 
 

@@ -7,17 +7,17 @@ export function SignOffPanel({
   onSignedOff,
 }: Readonly<{ claim: Claim; onSignedOff: () => void }>) {
   const [handlers, setHandlers] = useState<Handler[]>([]);
-  const [handlerId, setHandlerId] = useState("");
+  const [chosen, setChosen] = useState("");
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     void api.listHandlers().then((all) => {
-      const able = all.filter((handler) => handler.can_approve_over_limit);
-      setHandlers(able);
-      setHandlerId(able[0]?.handler_id ?? "");
+      setHandlers(all.filter((handler) => handler.can_approve_over_limit));
     });
   }, []);
+
+  const handlerId = chosen || (handlers[0]?.handler_id ?? "");
 
   const signOff = () => {
     setBusy(true);
@@ -45,7 +45,7 @@ export function SignOffPanel({
           <select
             value={handlerId}
             onChange={(event) => {
-              setHandlerId(event.target.value);
+              setChosen(event.target.value);
             }}
           >
             {handlers.map((handler) => (

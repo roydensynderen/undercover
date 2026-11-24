@@ -157,10 +157,10 @@ Tie it together and check the whole flow.
 
 Success criteria:
 
-- [ ] `npm run e2e` passes: queue, claim page, sign-off moving a claim to `decided`, and instructions
-- [ ] `uv run -m backend.seed` then `uv run -m agent` works all 25 claims; every claim ends `decided` or `awaiting_sign_off`, and none over $1,000 has a payment before sign-off
-- [ ] `docs/STATUS.md` lists every command above and they all work from a fresh clone after `uv sync` and `npm install`
-- [ ] `npm run check` passes in full
+- [x] `npm run e2e` passes: queue, claim page, sign-off moving a claim to `decided`, and instructions
+- [x] `uv run -m backend.seed` then `uv run -m agent` works all 25 claims; every claim ends `decided` or `awaiting_sign_off`, and none over $1,000 has a payment before sign-off
+- [x] `docs/STATUS.md` lists every command above and they all work from a fresh clone after `uv sync` and `npm install`
+- [x] `npm run check` passes in full
 
 ## Not in this build
 
